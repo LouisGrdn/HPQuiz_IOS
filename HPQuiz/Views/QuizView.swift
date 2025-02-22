@@ -35,7 +35,7 @@ struct QuizView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .globalBackground()
             .onReceive(Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()) { _ in
-                if Date() >= endInterval {
+                if Date() >= endInterval && !quizModel.showAnswer {
                     isTimeRunningOut = true
                     }
                 }
