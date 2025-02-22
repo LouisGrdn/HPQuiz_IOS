@@ -10,50 +10,33 @@ import SwiftUI
 struct QuizView: View {
     var quiz: Quiz
     @ObservedObject var quizModel: QuizModel
-    @State private var pressedAnswer: Answer?
     @Binding var path: NavigationPath
-
-    func getBackgroundColor(answer: Answer) -> Color {
-        let defaultColor = Color(red: 224/255, green: 225 / 255, blue: 221 / 255 )
-        guard quizModel.showAnswer else { return defaultColor }
-            return answer.isCorrect ? .green : (answer == pressedAnswer ? .red : defaultColor)
-    }
-
-    func returnToHome() {
-        if quizModel.currentQuestionIndex == 1 {
-            path.removeLast()
-        }
-    }
-
+    @State private var showEndScreen: Bool = false
+    @State private var correctAnswersCount: Int = 0
+    
     var body: some View {
-        VStack {
-            Text(quizModel.currentQuestion.prompt)
-                .font(.title2)
-                .foregroundStyle(.white)
-                .fontWeight(.bold)
-            ForEach(quizModel.currentQuestion.answers, id: \.self) { answer in
+        ZStack {
+            QuizQuestions(quiz: quiz, quizModel: quizModel, correctAnswersCount: $correctAnswersCount)
+            if showEndScreen {
+                EndModal(quiz: quiz, correctAnswersCount: $correctAnswersCount, path: $path)
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
                 Button(action: {
-                    if !quizModel.showAnswer {
-                        quizModel.selectAnswer(answer)
-                        pressedAnswer = answer
-                    }
+                    path.removeLast()
                 }) {
-                    Text(answer.answer)
-                        .frame(maxWidth: .infinity, maxHeight: 80)
-                        .padding()
-                        .background(getBackgroundColor(answer: answer))
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                        .overlay(RoundedRectangle(cornerRadius: 10)
-                            .stroke(.black, lineWidth: 2)
-                            )
-                }
+                    Text("Retour au menu")
+                        .frame(width: 150, height: 50)
+                        .globalQuestionBackground()
+                        .cornerRadius(radius: 10)
+                    }
                 .buttonStyle(.plain)
-                .padding()
             }
         }
         .navigationBarBackButtonHidden(true)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .globalBackground()
-        .ignoresSafeArea()
+        .onChange(of: quizModel.isFinished) {
+            showEndScreen = quizModel.isFinished
+        }
     }
 }

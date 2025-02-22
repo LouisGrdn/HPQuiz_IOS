@@ -22,6 +22,7 @@ class QuizModel: ObservableObject {
     @Published var currentQuestionIndex = 0
     @Published var isCorrect: Bool?
     @Published var showAnswer: Bool = false
+    @Published var isFinished: Bool = false
 
     var quiz: Quiz
 
@@ -46,6 +47,8 @@ class QuizModel: ObservableObject {
             currentQuestionIndex += 1
             isCorrect = nil
             showAnswer = false
+        } else {
+            isFinished = true
         }
     }
 }
