@@ -12,6 +12,7 @@ struct QuizQuestions: View {
     @ObservedObject var quizModel: QuizModel
     @State private var pressedAnswer: Answer?
     @Binding var correctAnswersCount: Int
+    let resetInterval: () -> Void
     
     func getBackgroundColor(answer: Answer) -> Color {
         let defaultColor = Color(red: 224/255, green: 225 / 255, blue: 221 / 255 )
@@ -28,7 +29,9 @@ struct QuizQuestions: View {
             ForEach(quizModel.currentQuestion.answers, id: \.self) { answer in
                 Button(action: {
                     if !quizModel.showAnswer {
-                        quizModel.selectAnswer(answer)
+                        quizModel.selectAnswer(answer) {
+                            resetInterval()
+                        }
                         pressedAnswer = answer
                         if answer.isCorrect {
                             correctAnswersCount += 1
@@ -39,13 +42,12 @@ struct QuizQuestions: View {
                         .frame(maxWidth: .infinity, maxHeight: 80)
                         .padding()
                         .background(getBackgroundColor(answer: answer))
+                        .globalQuestionBackground()
                         .cornerRadius(radius: 10)
                 }
                 .buttonStyle(.plain)
                 .padding()
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .globalBackground()
     }
 }

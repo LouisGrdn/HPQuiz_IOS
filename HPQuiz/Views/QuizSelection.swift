@@ -17,6 +17,7 @@ struct QuizSelection: View {
                     .globalQuestionBackground()
             }
             .globalBackground()
+            .foregroundStyle(.black)
             .scrollContentBackground(.hidden)
             .toolbar {
                 ToolbarItem(placement: .navigation) {

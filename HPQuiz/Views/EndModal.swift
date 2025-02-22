@@ -11,8 +11,12 @@ struct EndModal: View {
     var quiz: Quiz
     @Binding var correctAnswersCount: Int
     @Binding var path: NavigationPath
+    @Binding var isTimeOver: Bool
     
     func getResultText() -> String {
+        if isTimeOver {
+            return "Temps écoulé !"
+        }
         return correctAnswersCount >= quiz.questions.count / 2 ? "Bravo !" : "Dommage !"
     }
     
@@ -23,10 +27,11 @@ struct EndModal: View {
                 .font(.title2)
                 .foregroundStyle(.white)
                 .fontWeight(.bold)
-            
-            Text("Tu as obtenu \(correctAnswersCount)/\(quiz.questions.count) réponses correctes.")
-                .font(.title3)
-                .foregroundStyle(.white)
+            if !isTimeOver {
+                Text("Tu as obtenu \(correctAnswersCount)/\(quiz.questions.count) réponses correctes.")
+                    .font(.title3)
+                    .foregroundStyle(.white)
+            }
             
             Button("Retour au menu") {
                 path.removeLast()

@@ -19,6 +19,7 @@ struct GlobalQuestionBackground: ViewModifier {
         content
             .background(Color(red: 224/255, green: 225 / 255, blue: 221 / 255 ))
             .listRowBackground(Color(red: 224/255, green: 225 / 255, blue: 221 / 255 ))
+            .foregroundStyle(.black)
     }
 }
 

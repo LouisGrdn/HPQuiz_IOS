@@ -34,11 +34,12 @@ class QuizModel: ObservableObject {
         quiz.questions[currentQuestionIndex]
     }
 
-    func selectAnswer(_ answer: Answer) {
+    func selectAnswer(_ answer: Answer, resetInterval: @escaping () -> Void) {
         isCorrect = answer.isCorrect
         showAnswer = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             self.nextQuestion()
+            resetInterval()
         }
     }
 
